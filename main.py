@@ -88,20 +88,12 @@ def run_demo(executor: AgentExecutor):
         ),
         (
             "🧮 DB Query (Institutions)",
-            "Give me 3 colleges in Chittagong division.",
+            "Give me top 3 colleges in Barisal division.",
         ),
         (
             "🧮 DB Query (Restaurants)",
             "What are 3 top-rated restaurants in Dhaka?",
-        ),
-        (
-            "🌐 Web Search Query (General Knowledge)",
-            "What is the role of DGHS in Bangladesh?",
-        ),
-        (
-            "🌐 Web Search Query (Policy)",
-            "What is the healthcare policy in Bangladesh?",
-        ),
+        )
     ]
 
     print("\n" + "=" * 60)
