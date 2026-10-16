@@ -1,0 +1,27 @@
+# Environment Variables & Secrets
+.env
+*.env
+!.env.example
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Data artifacts & SQLite binaries (optional to exclude if you regenerate them)
+# Uncomment the line below if you don't want to track databases in git:
+# databases/*.db
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
