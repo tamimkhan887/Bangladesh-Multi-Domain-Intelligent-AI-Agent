@@ -1,7 +1,4 @@
-import pypandoc
-
-readme = r"""<div align="center">
-
+<div align="center">
 # 🇧🇩 Bangladesh Multi-Domain Intelligent AI Agent
 
 **One AI agent. Three Bangladesh-focused databases. Real-time web search.**
@@ -9,7 +6,6 @@ readme = r"""<div align="center">
 Built with **LangChain**, **OpenRouter**, and **SQLite**.
 
 </div>
-
 ---
 
 ## ✨ Features
