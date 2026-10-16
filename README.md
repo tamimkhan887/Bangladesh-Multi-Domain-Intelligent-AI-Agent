@@ -1,11 +1,13 @@
 <div align="center">
-# 🇧🇩 Bangladesh Multi-Domain Intelligent AI Agent
+
+## 🇧🇩 Bangladesh Multi-Domain Intelligent AI Agent</h3>
 
 **One AI agent. Three Bangladesh-focused databases. Real-time web search.**
 
 Built with **LangChain**, **OpenRouter**, and **SQLite**.
 
 </div>
+
 ---
 
 ## ✨ Features
