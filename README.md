@@ -1,180 +1,160 @@
+import pypandoc
+
+readme = r"""<div align="center">
+
 # 🇧🇩 Bangladesh Multi-Domain Intelligent AI Agent
 
-An autonomous AI Agent built with **LangChain** and **OpenRouter** that routes data-specific queries to three dedicated SQLite databases (Institutions, Hospitals, Restaurants in Bangladesh) and general knowledge/policy queries to a real-time **Web Search Tool**.
+**One AI agent. Three Bangladesh-focused databases. Real-time web search.**
+
+Built with **LangChain**, **OpenRouter**, and **SQLite**.
+
+</div>
 
 ---
 
-## 📁 Provided Datasets
+## ✨ Features
 
-The agent is powered by three curated Bangladesh datasets from Hugging Face:
+- 🏫 **Institutions** — schools, colleges, universities, and government institutions.
+- 🏥 **Hospitals** — hospitals, clinics, and health complexes.
+- 🍽️ **Restaurants** — locations, ratings, and reviews.
+- 🌐 **Web Search** — general knowledge and policy-related questions.
+- 🤖 **Smart Routing** — selects the relevant tool for each query.
 
-1. **Institutional Information of Bangladesh**  
-   🔗 [Mahadih534/Institutional-Information-of-Bangladesh](https://huggingface.co/datasets/Mahadih534/Institutional-Information-of-Bangladesh)  
-   *34,901 records* of universities, colleges, schools, government institutions, locations, and EIIN numbers.
-2. **All Bangladeshi Hospitals**  
-   🔗 [Mahadih534/all-bangladeshi-hospitals](https://huggingface.co/datasets/Mahadih534/all-bangladeshi-hospitals)  
-   *38,886 records* of hospitals, clinics, upazila health complexes, divisions, and public/private status.
-3. **Bangladeshi Restaurant Data**  
-   🔗 [Mahadih534/Bangladeshi-Restaurant-Data](https://huggingface.co/datasets/Mahadih534/Bangladeshi-Restaurant-Data)  
-   *12,703 records* of restaurants, ratings, reviews count, affluence, and addresses across Bangladesh.
+## 📁 Datasets
 
----
+| Dataset | Records | Coverage |
+|---|---:|---|
+| [Institutional Information of Bangladesh](https://huggingface.co/datasets/Mahadih534/Institutional-Information-of-Bangladesh) | 34,901 | Institutions, locations, EIIN |
+| [All Bangladeshi Hospitals](https://huggingface.co/datasets/Mahadih534/all-bangladeshi-hospitals) | 38,886 | Hospitals, clinics, facilities |
+| [Bangladeshi Restaurant Data](https://huggingface.co/datasets/Mahadih534/Bangladeshi-Restaurant-Data) | 12,703 | Restaurants, ratings, addresses |
 
-## 🛠️ Architecture & Workflow
-
-The system uses a **LangChain AgentExecutor** with dynamic tool calling. When a user submits a query, the agent analyzes its semantic intent:
-- **Data/Statistics queries** are routed to the corresponding SQLite database tool.
-- **General knowledge / Policy queries** are routed to the web search tool.
+## 🏗️ Architecture
 
 ```mermaid
 flowchart TD
-    UserQuery["User Input Query"] --> Agent["Main AI Agent (LangChain AgentExecutor)"]
-    
-    Agent -->|"Statistics & Data Queries"| DBRouter{"Domain Classifier"}
-    DBRouter -->|"Colleges, Universities, Govt Institutes"| InstTool["InstitutionsDBTool (institutions.db)"]
-    DBRouter -->|"Hospitals, Facilities, Clinics"| HospTool["HospitalsDBTool (hospitals.db)"]
-    DBRouter -->|"Restaurants, Cuisines, Ratings"| RestTool["RestaurantsDBTool (restaurants.db)"]
-    
-    Agent -->|"Policies, Definitions, General Knowledge"| WebTool["WebSearchTool (Tavily / DuckDuckGo)"]
-    
-    InstTool --> SQL1["Dynamic Read-Only SQL Generator & Executor"]
-    HospTool --> SQL2["Dynamic Read-Only SQL Generator & Executor"]
-    RestTool --> SQL3["Dynamic Read-Only SQL Generator & Executor"]
-    
-    SQL1 --> FinalAnswer["Synthesized Natural Language Response"]
-    SQL2 --> FinalAnswer
-    SQL3 --> FinalAnswer
-    WebTool --> FinalAnswer
+    A["User Query"] --> B["LangChain Agent"]
+    B --> C{"Tool Selection"}
+    C --> D["Institutions DB"]
+    C --> E["Hospitals DB"]
+    C --> F["Restaurants DB"]
+    C --> G["Web Search"]
+    D --> H["Read-Only SQL"]
+    E --> H
+    F --> H
+    H --> I["Natural-Language Answer"]
+    G --> I
 ```
-
----
 
 ## 📂 Project Structure
 
 ```text
 ├── data/
-│   ├── institutions.csv        # Raw dataset from Hugging Face
-│   ├── hospitals.csv           # Raw dataset from Hugging Face
-│   └── restaurants.csv         # Raw dataset from Hugging Face
+│   ├── institutions.csv
+│   ├── hospitals.csv
+│   └── restaurants.csv
 ├── databases/
-│   ├── institutions.db         # SQLite DB (table: institutions)
-│   ├── hospitals.db            # SQLite DB (table: hospitals)
-│   └── restaurants.db          # SQLite DB (table: restaurants)
+│   ├── institutions.db
+│   ├── hospitals.db
+│   └── restaurants.db
 ├── tools/
-│   ├── __init__.py             # Exports all tools
-│   ├── database_utils.py       # Reusable SQL generator, validator & runner
-│   ├── institutions_tool.py    # InstitutionsDBTool
-│   ├── hospitals_tool.py       # HospitalsDBTool
-│   ├── restaurants_tool.py     # RestaurantsDBTool
-│   └── web_search_tool.py      # WebSearchTool (Tavily + DuckDuckGo fallback)
-├── convert_datasets.py         # ETL script: CSVs -> SQLite DBs with clean schemas
-├── main.py                     # Main AgentExecutor, demo suite & interactive CLI
-├── requirements.txt            # Python dependencies
-├── .env.example                # Template for environment variables
-└── README.md                   # Project documentation
+│   ├── database_utils.py
+│   ├── institutions_tool.py
+│   ├── hospitals_tool.py
+│   ├── restaurants_tool.py
+│   └── web_search_tool.py
+├── convert_datasets.py
+├── main.py
+├── requirements.txt
+└── README.md
 ```
 
----
+## ⚙️ Setup
 
-## ⚙️ Installation & Setup
+### 1. Clone the repository
 
-### 1. Clone the Repository
 ```bash
 git clone <your-repo-url>
-cd Projects
+cd <repository-folder>
 ```
 
-### 2. Create and Activate Virtual Environment
-```bash
-# Windows (PowerShell)
-python -m venv .venv
-.venv\Scripts\Activate.ps1
+### 2. Create a virtual environment
 
-# Linux / macOS
+**Windows (PowerShell)**
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+**Linux / macOS**
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Install Dependencies
+### 3. Install dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure Environment Variables
-Copy `.env.example` to `.env` and configure your API keys:
-```bash
-cp .env.example .env
-```
-Edit `.env`:
+### 4. Configure `.env`
+
 ```env
-OPENROUTER_API_KEY=your_openrouter_api_key_here
-
-# Optional: Tavily API Key (DuckDuckGo is used automatically if omitted)
-TAVILY_API_KEY=your_tavily_key_here
+OPENROUTER_API_KEY=your_openrouter_api_key
+TAVILY_API_KEY=your_tavily_api_key
 ```
 
-### 5. Convert CSVs to SQLite DBs (If not already built)
+*Set `TAVILY_API_KEY` only if your web-search configuration uses Tavily.*
+
+### 5. Build the databases
+
+Place the CSV files in `data/`, then run:
+
 ```bash
 python convert_datasets.py
 ```
 
----
+## 🚀 Run
 
-## 🚀 Running the Agent
+| Mode | Command |
+|---|---|
+| Demo / verification | `python main.py` |
+| Interactive chat | `python main.py --chat` |
 
-### A. Run Automated Verification / Demo Mode
-Executes a demonstration suite covering all three databases and general web search queries:
-```bash
-python main.py
-```
+### Python usage
 
-### B. Run Interactive Chat Mode
-Start a real-time conversational session with the agent:
-```bash
-python main.py --chat
-```
-
-### C. Programmatic Python Usage
 ```python
 from main import build_agent_executor
 
 agent = build_agent_executor(verbose=True)
 
-# 🧮 1. Database Query (Hospitals)
-result1 = agent.invoke({"input": "How many hospitals are in Dhaka?"})
-print(result1["output"])
+result = agent.invoke({
+    "input": "Give me 3 colleges in Barisal division."
+})
 
-# 🧮 2. Database Query (Institutions)
-result2 = agent.invoke({"input": "Give me 3 colleges in Chittagong division."})
-print(result2["output"])
-
-# 🧮 3. Database Query (Restaurants)
-result3 = agent.invoke({"input": "What are 3 top-rated restaurants in Dhaka?"})
-print(result3["output"])
-
-# 🌐 4. Web Search Query (General Knowledge & Policy)
-result4 = agent.invoke({"input": "What is the role of DGHS in Bangladesh?"})
-print(result4["output"])
-
-result5 = agent.invoke({"input": "What is the healthcare policy in Bangladesh?"})
-print(result5["output"])
+print(result["output"])
 ```
 
----
+## 🔎 Example Queries
 
-## 🔍 Verified Example Queries & Outputs
-
-| Query | Routed Tool | Output Summary |
-| :--- | :--- | :--- |
-| **"How many hospitals are in Dhaka?"** | `HospitalsDBTool` | Verified: `9,876 hospitals` found in Dhaka district. |
-| **"Give me 3 colleges in Chittagong division"** | `InstitutionsDBTool` | Returns 3 verified colleges (e.g., Bandarban Govt. Women College, etc.). |
-| **"What are 3 top-rated restaurants in Dhaka?"** | `RestaurantsDBTool` | Returns top 5.0 rated dining establishments. |
-| **"What is the role of DGHS in Bangladesh?"** | `WebSearchTool` | Explains DGHS as the Directorate General of Health Services under MOHFW. |
-| **"What is the healthcare policy in Bangladesh?"** | `WebSearchTool` | Synthesizes National Health Policy, 4th/5th HPNSP, and reform initiatives. |
+| Query | Tool |
+|---|---|
+| How many hospitals are listed in Dhaka? | `HospitalsDBTool` |
+| Give me 3 colleges in Barisal division. | `InstitutionsDBTool` |
+| Show highly rated restaurants in Dhaka. | `RestaurantsDBTool` |
+| What is the current policy on a public service? | `WebSearchTool` |
 
 ---
 
-## 🛡️ Security & Safety Guards
-- **Read-Only SQLite**: Database connections use SQLite `?mode=ro` and `PRAGMA query_only = ON`.
-- **SQL Sanitization**: Generated queries are strictly checked: only single `SELECT` statements are allowed. Any `DROP`, `DELETE`, `UPDATE`, `INSERT`, `ATTACH`, comments (`--`, `/*`), or multi-statements (`;`) are rejected before execution.
-- **Failover Search**: `WebSearchTool` automatically falls back to DuckDuckGo search if no Tavily API key is provided, preventing runtime crashes.
+<div align="center">
+
+**Built for Bangladesh 🇧🇩**
+
+</div>
+"""
+
+output_path = "/mnt/data/README.md"
+pypandoc.convert_text(readme, "md", format="md", outputfile=output_path, extra_args=["--standalone"])
+print(f"Created redesigned README at {output_path}")
